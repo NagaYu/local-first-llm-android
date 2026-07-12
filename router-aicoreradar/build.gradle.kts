@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.maven.publish)
 }
 
 android {
@@ -27,9 +28,11 @@ kotlin {
 }
 
 dependencies {
+    // Both are part of this module's public contract: it implements `router`'s
+    // CapabilityProvider and maps `aicore-radar`'s report types.
     api(project(":router"))
-    // aicore-radar dependency is added in phase 5 once its published coordinates
-    // are confirmed resolvable (see project task list).
+    api(libs.aicore.radar)
+    implementation(libs.kotlinx.coroutines.core)
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlin.test)

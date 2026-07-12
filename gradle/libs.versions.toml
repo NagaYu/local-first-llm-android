@@ -7,6 +7,7 @@ okhttp = "4.12.0"
 mlkitGenaiPrompt = "1.0.0-beta2"
 junit = "4.13.2"
 mavenPublish = "0.34.0"
+aicoreRadar = "0.1.0"
 
 [libraries]
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
@@ -18,6 +19,9 @@ okhttp-mockwebserver = { module = "com.squareup.okhttp3:mockwebserver", version.
 mlkit-genai-prompt = { module = "com.google.mlkit:genai-prompt", version.ref = "mlkitGenaiPrompt" }
 junit = { module = "junit:junit", version.ref = "junit" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+# Sibling project, published separately to Maven Central. Only the optional
+# `router-aicoreradar` module depends on it; the core `router` never does.
+aicore-radar = { module = "io.github.nagayu:aicore-radar", version.ref = "aicoreRadar" }
 
 [plugins]
 android-library = { id = "com.android.library", version.ref = "agp" }
