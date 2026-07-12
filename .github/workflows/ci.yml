@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Cancel superseded runs on the same ref.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  core:
+    name: router (core) unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build and test the core module
+        run: ./gradlew :router:build :router:testDebugUnitTest --stacktrace
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: router-test-results
+          path: router/build/reports/tests/
+          if-no-files-found: ignore
+
+  integration:
+    name: router-aicoreradar unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      # The optional integration module depends on the sibling artifact
+      # io.github.nagayu:aicore-radar. Until that is published to Maven Central,
+      # this job cleanly skips (with a notice) so CI stays green; it starts
+      # exercising the mapping automatically the moment aicore-radar 0.1.0 lands.
+      - name: Check whether aicore-radar is published
+        id: dep
+        run: |
+          URL="https://repo1.maven.org/maven2/io/github/nagayu/aicore-radar/0.1.0/aicore-radar-0.1.0.pom"
+          if curl -sfI "$URL" > /dev/null; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::aicore-radar 0.1.0 is not on Maven Central yet — skipping router-aicoreradar tests."
+          fi
+
+      - name: Build and test the integration module
+        if: steps.dep.outputs.available == 'true'
+        run: ./gradlew :router-aicoreradar:testDebugUnitTest -PwithAicoreRadar --stacktrace

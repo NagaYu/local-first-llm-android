@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.maven.publish)
 }
 
 android {
@@ -39,4 +40,12 @@ dependencies {
     testImplementation(libs.kotlin.test)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.okhttp.mockwebserver)
+}
+
+// Publishing (coordinates/POM come from gradle.properties). Signing and the
+// Central Portal upload only run for the `publish*` tasks, which need
+// credentials — `build`/`test` never trigger them. See CONTRIBUTING.md.
+mavenPublishing {
+    publishToMavenCentral()
+    signAllPublications()
 }

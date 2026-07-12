@@ -34,6 +34,7 @@ rootProject.name = "local-first-llm-android"
 // The core library and the example app build from a clean clone with no
 // portfolio prerequisites.
 include(":router")
+include(":app-example")
 
 // Optional AICore-capability-aware integration. It depends on the sibling
 // artifact `io.github.nagayu:aicore-radar`, published separately — so it is
