@@ -1,5 +1,7 @@
 # local-first-llm-android
 
+> Implementation example of local-first-llm for Android (Kotlin, AICore + optional cloud). The routing policy lives in the suite core ([local-first-llm](https://github.com/NagaYu/local-first-llm)); this repository shows one platform implementation of it.
+
 **Per-request on-device/cloud LLM routing for native Android — provider-agnostic, not wedded to any one SDK.**
 
 [![CI](https://github.com/NagaYu/local-first-llm-android/actions/workflows/ci.yml/badge.svg)](https://github.com/NagaYu/local-first-llm-android/actions/workflows/ci.yml)
@@ -99,12 +101,19 @@ Resilience: if the chosen backend throws, the router retries **once** against th
 ## Prior art
 
 - **Firebase AI Logic hybrid inference** — the closest existing analog; it validates the pattern but is Firebase/Gemini-locked (and Chrome-desktop-only on the web).
-- **[`local-first-llm`](https://github.com/NagaYu/local-first-llm)** — this project's TypeScript/browser sibling, which established and validated the routing policy design ported here. The Kotlin `decide()` is a faithful port of its decision tree.
+- **[`local-first-llm`](https://github.com/NagaYu/local-first-llm)** — the suite core (TypeScript/browser), which established and validated the routing policy design ported here. The Kotlin `decide()` is a faithful port of its decision tree.
 - **[`aicore-radar`](https://github.com/NagaYu/aicore-radar)** — also by this author; the recommended measured capability signal for the optional `router-aicoreradar` module. The relationship is an optional module dependency, not a core one.
 
 ## Status
 
 `0.1.0` — first release. Non-streaming `complete()` across all backends; streaming is on the roadmap. See [CHANGELOG.md](CHANGELOG.md).
+
+## Local-first suite
+
+This repository is an implementation example in the local-first suite (Android / Kotlin).
+
+- Suite core (routing policy): [local-first-llm](https://github.com/NagaYu/local-first-llm)
+- Full list of suite repositories and their roles: [Suite map](https://github.com/NagaYu/local-first-llm#suite-map)
 
 ## License
 
